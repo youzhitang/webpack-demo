@@ -1,21 +1,22 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path')
-
 const base = require('./webpack.config.base.js')
-
 module.exports = {
-  // 把base的所有属性抄到这里
   ...base,
-  mode: 'development',
-  devServer: {
-    contentBase: './dist',
-  },
+  plugins: [
+    ...base.plugins,
+    //提取CSS的插件
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css',
+      chunkFilename: '[id].[contenthash].css',
+    })
+  ],
   module: {
     rules: [
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
     ],
   },
